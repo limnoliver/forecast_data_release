@@ -5,14 +5,14 @@ title: >-
 abstract: >-
   This data release contains the forcings and outputs of 7-day ahead maximum water temperature
   forecasting models that made real-time predictions in the Delaware River Basin during 2021.
-  The model is driven by weather forecasts and observed releases and produces maximum water temperature
-  forecasts for the issue day (day 0) and 7 days into the future (days 1-7) for five sites in the 
-  Delaware River Basin. This data release captures the entire forecasting period that is reported in
+  The model is driven by weather forecasts and observed reservoir releases and produces maximum water temperature
+  forecasts for the issue day (day 0) and 7 days into the future (days 1-7) at five sites.
+  This data release captures the entire forecasting period that is reported in
   Zwart et al. 2021, and is an extensionsion of a previous data release that contains all data needed
-  to build these models but only extends to July 16, 2021. Additionally, this release contains a tidy
-  version of the model predictions with paired observations for easier reuse.
+  to build these models but only extends to July 16, 2021 (Oliver et al. 2021). Additionally, 
+  this release contains a tidy version of the model predictions with paired observations for easier reuse.
       
-authors: ["[Jacob A. Zwart]", "[Samantha K. Oliver], [W. David Watkins]"]
+authors: ["Jacob A. Zwart", "Samantha K. Oliver", "W. David Watkins"]
 pubdate: 2021 # replace with actual year, e.g., 2020
 doi: https://doi.org/10.5066/P96R34A7
 
@@ -36,113 +36,591 @@ cross-cites:
     pubdate: 2021
     link: https://doi.org/10.5066/P9GD8I7A
     
-   -
+  -
     authors: ['Jacob A. Zwart', 'Samantha K. Oliver',  'William D. Watkins',  'Jeffrey Sadler',  'Alison P. Appling',  'Hayley Corson-Dosch',  'Xiaowei Jia', 'Vipin Kumar',  'Jordan S. Read']
     title: >-
       Source code: Near-term forecasts of stream temperature using process-guided deep learning and data assimilation
     pubdate: 2021
-    link: https://zenodo.org/record/5164910#.YYLmIp7MKCo   
+    link: https://zenodo.org/record/5164910#.YYLmIp7MKCo
+  -
+    authors: ['Roland Viger', 'Andrew Bock']
+    title: >-
+      GIS Features of the Geospatial Fabric for National Hydrologic Modeling
+    pubdate: 2014
+    link: http://dx.doi.org/doi:10.5066/F7542KMD
+  -
+    authors: ['U.S. Geological Survey']
+    title: >-
+      USGS Water Data for the Nation, accessed on 2021-09-30
+    pubdate: 2016
+    form: publication
+    link: https://waterdata.usgs.gov/nwis
+  -
+    authors: ['NA']
+    title: >-
+      National Oceanic and Atmospheric Administration Global Ensemble Forecast System
+    pubdate: 2020
+    link: https://www.emc.ncep.noaa.gov/emc/pages/numerical_forecast_systems/gefs.php
 
 process-date: !expr format(Sys.time(),'%Y%m%d')
-file-format: XX need to fill this in
+file-format: >-
+  This data release contains shape files, one comma-delimited file (.csv), one compressed comma-delimited file (.zip),
+  one compressed folder that contains many network common data form files (netCDF, .nc), and one 
+  compresseed folder that contains many netCDF and extensible markup language files (.xml).
 
 entities:
   -
-    data-name: example_cars.csv
-    data-description: A csv file containing important information...
+    data-name: meteorological_[2021-04-16_2021-09-30]_files.zip
+    data-description: >-
+      NOAA Global Ensemble Forecasting System v12.0 0.25-degree operational model output for the 00 UTC forecast cycle from 2021-04-15 to 2021-07-16.
+      These data are aggregated to the daily scale and NOAA GEFS grid cells are matched to the centroid of the target stream segment. The target stream segment
+      seg_id_nat (National Geospatial Fabric segment code) is used as the location identifier for these data.
+
+      
+      The zipped folder contains one NetCDF file per forecast issue date evaluated in Zwart and others 2021, such
+      that the file name is final_noaa_gefs_{extent}_{YYYY-MM-DD}_00_forecast_segments.segments.nc. Archiving of the NOAA GEFS
+      product was changed from USGS NGWOS priority basins early in the record (extent = NGWOS) to the continental U.S. starting
+      on 2021-05-26 which is reflected in the name change (extent = CONUS).
+
+
+      Example code for how read the NOAA GEFS .nc files can be found in the "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
+
     attributes:
     -
-      attr-label: speed
-      attr-def: definition of column_name_1
+      attr-label: RH
+      attr-def: >-
+        Relative humidity
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: decimal fraction
+    -
+      attr-label: TCDC
+      attr-def: >-
+        Total cloud cover
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: decimal fraction
+    -
+      attr-label: TMP
+      attr-def: >-
+        Air temperature
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: degrees C
+    -
+      attr-label: DSWRF
+      attr-def: >-
+        Downward short-wave radiation flux
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: Watts per meter squared
+    -
+      attr-label: WS
+      attr-def: >-
+        Wind speed
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: meters per second
+    -
+      attr-label: TMAX
+      attr-def: >-
+        Maximum air temperature
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: degrees C
+    -
+      attr-label: TMIN
+      attr-def: >-
+        Minimum air temperature
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: degrees C
+    -
+      attr-label: APCP
+      attr-def: >-
+        Total accumulated precipitation
+      attr-defs: https://www.nco.ncep.noaa.gov/pmb/products/gens/gec00.t00z.pgrb2s.0p25.f003.shtml
+      data-min: NA
+      data-max: NA
+      data-units: meters
+    -
+      attr-label: time
+      attr-def: >-
+        Valid time of the forecast
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: >-
+        seconds since 1970-01-01 00:00:00.0 0:00
+    -
+      attr-label: seg_id_nat
+      attr-def: >-
+        National unique stream reach identifier. This is the ID named seg_id_nat from the Geospatial Fabric for National Hydrologic Modeling.
       attr-defs: >-
-        citation or URL of column_name_1. If citation, should appear in cross-cites. Can use NA or "This release"
+        https://www.sciencebase.gov/catalog/item/535eda80e4b08e65d60fc834
+      data-min: NA
+      data-max: NA
+      data-units: dimensionless
+    -
+      attr-label: E
+      attr-def: >-
+         NOAA GEFS ensemble member, 0 = control
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: integer
+  -
+    data-name: temperature_data.csv
+    data-description: >- 
+      Daily water temperature observations at the five forecast sites in the Delaware River Basin
+      during the forecasting period. Observations were retrieved from the National
+      Water Information System (NWIS).
+      
+    attributes:
+    -
+      attr-label: site_id
+      attr-def: >-
+        Site identifier from the data provider; this is the USGS site number with a "USGS-" prefix.
+      attr-defs: This data release
       data-min: NA
       data-max: NA
       data-units: NA
     -
-      attr-label: dist
-      attr-def: definition of column_name_2
-      attr-defs: >-
-        citation or URL of column_name_2. If citation, should appear in cross-cites. Can use NA or "This release"
+      attr-label: date
+      attr-def: >-
+        Date of temperature measurement
+      attr-defs: This data release
+      data-min: 20210412
+      data-max: 20210929
+      data-units: NA
+    -
+      attr-label: mean_temp_c
+      attr-def: >-
+        Mean daily water temperature
+      attr-defs: This data release
+      data-min: -0.4
+      data-max: 34
+      data-units: degrees C
+    -
+      attr-label: min_temp_c
+      attr-def: >-
+        Minimum daily water temperature
+      attr-defs: This data release
+      data-min: -0.4
+      data-max: 34
+      data-units: degrees C
+    -
+      attr-label: max_temp_c
+      attr-def: >-
+        Maximum daily water temperature
+      attr-defs: This data release
+      data-min: -0.4
+      data-max: 34.9
+      data-units: degrees C
+    -
+      attr-label: cd
+      attr-def: >-
+        Data qualification codes; A = approved for publication, P = provisional and subject to revision, *** = temporarily unavailable.
+      attr-defs: https://nwis.waterdata.usgs.gov/usa/nwis/pmcodes/help?codes_help
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: site_name
+      attr-def: >-
+        Name of the site. NR = Neversink River, EBDR = East Branch of the Delaware River, WBDR = West Branch of the Delaware River, DR = Delaware River
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: seg_id_nat
+      attr-def: >-
+        The closest river reach from the Geospatial Fabric v1.1, by Euclidean distance, from the monitoring site. 
+        Matches were limited to a 500m buffer of the monitoring site. The reach number is from the field "nsegment_v1_1" in the 
+        Geospatial Fabric for the National Hydrologic Model v1.1.
+        
+        
+        Once the original reach match was assigned, the matched segment was reassigned if the endpoint of the 
+        upstream reach was closer to the monitoring site (by river distance) than the endpoint of the matched reach. 
+        If the upstream endpoint was closer, but there was a confluence directly upstream, then the original match was kept.
+      attr-defs:  >-
+        https://doi.org/10.5066/P971JAGF
       data-min: NA
       data-max: NA
       data-units: NA
   -
-    data-name: example_shapefile.zip
-    data-description: A zip file containing...
+    data-name: forecast_[2021-04-16_2021-09-30]_files.zip
+    data-description: >-
+      Forecasts of daily maximum stream temperature for five select locations in the Delaware River Basin issued from 2021-04-15 to 2021-07-16.
+      The target stream segment seg_id_nat (National Geospatial Fabric segment code) is used as the location identifier for these data.
+
+      
+      Forecasts were generated with a 1) persistence model that used the most recent observed daily
+      maximum temperature as the 7-day ahead forecast, 2) a deep learning model, and a 3) deep learning
+      model with data assimilation. Code that trained the deep learning models can be found in the "run-pgdl-da " repository,
+      and code that generated the forecasts can be found in the "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
+
+      
+      The zipped file contains one zipped folder per issue date named forecast[{YYYY-MM-DD}]_files.zip.
+      Each issue date zipped folder contains two files for each model (DA, no_DA, persistence {model}),
+      stream segment (1571, 1573, 1641, 1565, 1450 {seg_id_nat}),
+      and reservoir release scenario (0cfs or 100cfs {scenario}) including a forecast netCDF file (.nc) and metadata file (.xml)
+      such that files are named lstm_seg_id_nat_[{seg_id_nat}]_{model}_forecast_[{YYYY-MM-DD}]_release[{scenario}]
+
+      
+      Since observations of daily maximum stream temperature were not available when we issued
+      the forecast, the persistence forecast files have NA's for the daily maximum stream temperature
+      prediction. When evaluating the performance of the persistence forecasts against the
+      deep learning models, we use yesterday's maximum temperature value as the forecast for
+      7 days into the future. See the evaluation code in the "evaluate-forecast" repository in
+      Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910) for this adjustment.
+
     attributes:
     -
-      attr-label: x
-      attr-def: definition of x
-      attr-defs: >-
-        citation or URL of x. If citation, should appear in cross-cites. Can use NA or "This release"
+      attr-label: max_temp
+      attr-def: >-
+        daily maximum stream temperature
+      attr-defs: this data release
       data-min: NA
       data-max: NA
-      data-units: NA  
+      data-units: degrees C
     -
-      attr-label: y
-      attr-def: definition of y
+      attr-label: data_assimilation
+      attr-def: >-
+        Ecological Forecasting Initiative forecasting standards data assimilation code. 0 = no data assimilation, 1 = data assimilation at given forecast issue time step
+      attr-defs: this data release
+      data-min: NA
+      data-max: NA
+      data-units: integer
+    -
+      attr-label: issue_time
+      attr-def: >-
+        forecast issue time
+      attr-defs: this data release
+      data-min: NA
+      data-max: NA
+      data-units: days since {forecast issue time}
+    -
+      attr-label: time
+      attr-def: >-
+        forecast valid time
+      attr-defs: this data release
+      data-min: NA
+      data-max: NA
+      data-units: 1 day
+    -
+      attr-label: seg_id_nat
+      attr-def: >-
+        National unique stream reach identifier. This is the ID named seg_id_nat from the Geospatial Fabric for National Hydrologic Modeling.
       attr-defs: >-
-        citation or URL of y. If citation, should appear in cross-cites. Can use NA or "This release"
+        https://www.sciencebase.gov/catalog/item/535eda80e4b08e65d60fc834
+      data-min: NA
+      data-max: NA
+      data-units: dimensionless
+    -
+      attr-label: ensemble
+      attr-def: >-
+        stream temperature forecast ensemble member
+      attr-defs: this data release
+      data-min: NA
+      data-max: NA
+      data-units: integer
+  -
+    data-name: release_data.csv
+    data-description: >- 
+      Daily reservoir releases from three reservoirs (Cannonsville, Pepacton, Neversink)
+      in the Delaware River Basin.
+      
+    attributes:
+    -
+      attr-label: site_no
+      attr-def: >-
+        USGS site number.
+      attr-defs: This data release
       data-min: NA
       data-max: NA
       data-units: NA
     -
-      attr-label: z
-      attr-def: definition of z
+      attr-label: date
+      attr-def: >-
+        Date of reservoir release.
+      attr-defs: This data release
+      data-min: 2021-04-12
+      data-max: 2021-09-30
+      data-units: NA
+    -
+      attr-label: release_volume_cms
+      attr-def: >-
+        Average release volume over the day.
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: cubic meters per second
+    -
+      attr-label: reservoir
+      attr-def: >-
+        Name of the reservoir, either Pepacton, Cannonsville, or Neversink.
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: cubic meters per second
+  -
+    data-name: all_ensembles_predicted_observed.zip
+    data-description: >- 
+      Model predictions with paired observations from all 3100 ensembles.
+      Ensembles are generated by using the 31 NOAA GEFS ensembles with
+      100 Monte Carlo dropouts per NOAA GEFS ensemble. 
+    attributes:
+    -
+      attr-label: issue_time
+      attr-def: >-
+        Date that the forecast was issued.
+      attr-defs: This data release
+      data-min: 2021-04-16
+      data-max: 2021-09-30
+      data-units: NA
+    -
+      attr-label: time
+      attr-def: >-
+        Valid date of forecast.
+      attr-defs: This data release
+      data-min: 2021-04-16
+      data-max: 2021-10-07
+      data-units: NA
+    -
+      attr-label: seg_id_nat
+      attr-def: >-
+        National unique stream reach identifier. This is the ID named seg_id_nat from the Geospatial Fabric for National Hydrologic Modeling.
       attr-defs: >-
-        citation or URL of z. If citation, should appear in cross-cites. Can use NA or "This release"
+        https://www.sciencebase.gov/catalog/item/535eda80e4b08e65d60fc834
+      data-min: NA
+      data-max: NA
+      data-units: dimensionless
+    -
+      attr-label: ensemble
+      attr-def: >-
+        Ensemble member. Ensembles are generated from 31 NOAA GEFS ensembles
+        and 100 Monte Carlo dropouts. The first 100 ensembles are generated with the
+        first NOAA GEFS ensemble,  ensembles 101-200 are generated with the second NOAA 
+        GEFS ensembles, and so on. 
+      attr-defs: This data release
+      data-min: 1
+      data-max: 3100
+      data-units: NA
+    -
+      attr-label: max_temp
+      attr-def: >-
+        Predicted maximum water temperature
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius
+    -
+      attr-label: model_name
+      attr-def: >-
+        Which model was used to generate the predictions, either 
+        the deep learning model with data assimalation (DA) or the
+        deep learning without data assimilation (no_DA).
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: lead_time
+      attr-def: >-
+        The number of days into the future the prediction was made,
+        or the difference between the issue time and the time.
+      attr-defs: This data release
+      data-min: 0
+      data-max: 7
+      data-units: NA
+    -
+      attr-label: obs_max_temp_c
+      attr-def: >-
+        Observed maximum water temperature
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius
+  -
+    data-name: paired_predicted_observed_temperatures.csv
+    data-description: >- 
+      Model predictions with paired observations from three models.
+      Predictions from the deep learning with (DA) and without (no_DA)
+      data assimilation had 3100 ensembles, and reported predictions
+      are the mean of the ensembles. The persistence model was generated
+      by propagating yesterday's observed maximum temperature 7 days into
+      the future. 
+    attributes:
+    -
+      attr-label: seg_id_nat
+      attr-def: >-
+        National unique stream reach identifier. This is the ID named seg_id_nat from the Geospatial Fabric for National Hydrologic Modeling.
+      attr-defs: >-
+        https://www.sciencebase.gov/catalog/item/535eda80e4b08e65d60fc834
+      data-min: NA
+      data-max: NA
+      data-units: dimensionless
+    -
+      attr-label: issue_time
+      attr-def: >-
+        Date that the forecast was issued.
+      attr-defs: This data release
+      data-min: 2021-04-16
+      data-max: 2021-09-30
+      data-units: NA
+    -
+      attr-label: time
+      attr-def: >-
+        Valid date of forecast.
+      attr-defs: This data release
+      data-min: 2021-04-16
+      data-max: 2021-10-07
+      data-units: NA
+    -
+      attr-label: model_name
+      attr-def: >-
+        Which model was used to generate the predictions, either 
+        the deep learning model with data assimalation (DA) or the
+        deep learning without data assimilation (no_DA).
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: max_temp_c_predicted
+      attr-def: >-
+        Predicted maximum water temperature
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius
+    -
+      attr-label: max_temp_l90
+      attr-def: >-
+        The 10th percentile maximum water temperature prediction, calculated
+        from the 3100 ensembles generated from the model with (DA) and without (no_DA)
+        data assimilation. 
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius
+    -
+      attr-label: max_temp_u90
+      attr-def: >-
+        The 90th percentile maximum water temperature prediction, calculated
+        from the 3100 ensembles generated from the model with (DA) and without (no_DA)
+        data assimilation. 
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius
+    -
+      attr-label: prob_exceed_75
+      attr-def: >-
+        Probability of exceeding 75 degrees Fahrenheit, calculated
+        as the proportion of the 3100 ensemble predictions that exceeded
+        75 degrees Fahrenheit. 
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: lead_time
+      attr-def: >-
+        The number of days into the future the prediction was made,
+        or the difference between the issue time and the time.
+      attr-defs: This data release
+      data-min: 0
+      data-max: 7
+      data-units: NA
+    -
+      attr-label: max_temp_c
+      attr-def: >-
+        Observed maximum water temperature
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: degrees Celsius  
+    -
+      attr-label: site_name
+      attr-def: >-
+        Name of the site. NR = Neversink River, EBDR = East Branch of the Delaware River, WBDR = West Branch of the Delaware River, DR = Delaware River
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
+    -
+      attr-label: scenario
+      attr-def: >-
+        Water release scenario that was used to generate the forecasts; scenarios included
+        the planned conservation release value (+0cfs) or the conservation release 
+        value plus 100 cfs (+100cfs)
+      attr-defs: This data release
       data-min: NA
       data-max: NA
       data-units: NA
 
 
-purpose: Fisheries biology, limnological research, and climate science.
-start-date: 19800401
-end-date: 20191231
+purpose: Decision making, reservoir releases, ecological forecasting.
+start-date: 20210412
+end-date: 20210930
 
 update: none planned
-themekeywords: ["machine learning", "deep learning", "hybrid modeling", "water","temperature", "temperate lakes","reservoirs","modeling","climate change","thermal profiles"]
+themekeywords: ["forecasting", "data assimilation", "machine learning", "deep learning", "hybrid modeling", "water","temperature", "rivers","reservoirs","modeling"]
 
 usage-rules: >-
   These data are open access usable via creative commons as long as original data providers are acknowledged
 
-descgeog: "Lake polygons as defined by the national hydrography dataset high resolution"
+descgeog: "River segments as defined by the National Geospatial Fabric"
 data-publisher: U.S. Geological Survey
 indirect-spatial: U.S.A.
 latitude-res: 0.00001
 longitude-res: 0.00001
 
 # ----contacts----
-contact-person: Jordan S. Read
-contact-phone: 608-821-3922
-contact-email: jread@usgs.gov
-contact-position: Research Civil Engineer
-contact-address: "8505 Research Way"
-contact-city: Middleton
+contact-person: Jacob A. Zwart
+contact-phone: 269-370-2788 
+contact-email: jzwart@usgs.gov
+contact-position: Data Scientist
+contact-address: "1 Gifford Pinchot Drive"
+contact-city: Madison
 contact-state: WI
-contact-zip: 53562
+contact-zip: 53726
 
-metadata-person: Jordan S. Read
-metadata-position: Research Civil Engineer
-metadata-phone: 608-821-3921
+metadata-person: Jacob A. Zwart
+metadata-position: Data Scientist
+metadata-phone: 269-370-2788 
 metadata-fax: 608-821-3817
-metadata-email: jread@usgs.gov
-metadata-address: "8505 Research Way"
-metadata-city: Middleton
+metadata-email: jzwart@usgs.gov
+metadata-address: "1 Gifford Pinchot Drive"
+metadata-city: Madison
 metadata-state: WI
-metadata-zip: 53562
+metadata-zip: 53726
 metadata-date: !expr format(Sys.time(),'%Y%m%d')
 
 accur-test: No formal attribute accuracy tests were conducted.
 funding-credits: >-
-  This study was funded by the [DETAILS HERE]
+  This study was funded by the U.S. Geological Survey.
   This research used resources of the Core Science Analytics and Synthesis Advanced Research Computing program at the U.S. Geological Survey.
 
 process-description: >-
-  [A description of processing]
+  The data in this release were retrieved from the National Water Information System (NWIS), 
+  the National Oceanic and Atmospheric Association (NOAA), or generated by one of the data-driven
+  modeling approaches to predict maximum water temperature. The models estimate the relationship 
+  between model drivers (weather data, reservoir releases) and maximum water temperature to
+  make forecasts of maximum water temperature 7 days into the future. 
+  
 
-distro-person: Jordan S. Read
+distro-person: Jacob A. Zwart
 liability-statement: >-
   Unless otherwise stated, all data, metadata and related materials are considered to satisfy the quality standards relative to the purpose for which the data were collected.
   Although these data and associated metadata have been reviewed for accuracy and completeness and approved for release by the U.S. Geological Survey (USGS),

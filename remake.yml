@@ -15,35 +15,49 @@ targets:
     depends:
       - log/sb_posted_files.csv
     
-
-  sf_spatial_data:
-    command: st_read('example_data/example_shapefile/example_shapefile.shp')
-    depends:
-      - example_data/example_shapefile/example_shapefile.dbf
-      - example_data/example_shapefile/example_shapefile.prj
-      - example_data/example_shapefile/example_shapefile.shx
+   
+  # manually downloaded git-commited files from
+  # https://code.usgs.gov/wma/wp/forecast-preprint-code
+  # da_noda_all_ensembles.rds
+  out_data/all_ensembles_predicted_observed.csv:
+    command: rds_to_csv(rds_file = "in_data/da_noda_all_ensembles.rds", csv_file = target_name)
+    
+  out_data/all_ensembles_predicted_observed.zip:
+    command: csv_to_zip(csv_file = 'out_data/all_ensembles_predicted_observed.csv', zip_file = target_name)
   
+  out_data/paired_predicted_observed_temperatures.csv:
+    command: rds_to_csv(rds_file = "in_data/all_mods_with_obs.rds", csv_file = target_name)
+  
+  forecast_sites:
+    command: get_unique_sites("in_data/temperature_data.csv")
+    
+  # point to site file in delaware-model-prep pipeline to get lat/long
+  sf_spatial_data:
+    command: sf_subset(sites_file = '../delaware-model-prep/2_observations/out/crosswalk_site_reach.rds', sites = forecast_sites)
+
   spatial_metadata:
     command: extract_feature(sf_spatial_data)
     
-  out_data/cars.csv:
-    command: file.copy(from = "example_data/example_cars.csv", 
-      to = target_name, overwrite = TRUE)
-  
-  out_data/spatial.zip:
-    command: sf_to_zip(zip_filename = target_name, 
-      sf_object = sf_spatial_data, layer_name = I('spatial_data'))
+  out_data/forecast_sites.zip:
+    command: sf_to_zip(zip_filename = target_name, sf_object = sf_spatial_data, layer_name = I('forecast_sites'))
 
   out_xml/fgdc_metadata.xml:
     command: render(filename = target_name,
       "in_text/text_data_release.yml",
       spatial_metadata)
     
+  # note in_data/meteorological_[2021-04-16_2021-09-30]_files.zip
+  # and in_data/forecast_[2021-04-16_2021-09-30]_files.zip
+  # were zipped and exported from caldera/projects/usgs/iidd/datasci/water-prediction/ARCHIVE21-forecast-pgdl-da
   log/sb_posted_files.csv:
-    command: sb_replace_files(filename = target_name, 
-      sb_id = I('618141e9d34e9f2789e2e098'),
-      #"out_data/spatial.zip",
-      #"out_data/cars.csv",
+    command: sb_replace_files(filename = target_name, sb_id = I('618141e9d34e9f2789e2e098'),
+      "out_data/forecast_sites.zip",
+      'in_data/meteorological_[2021-04-16_2021-09-30]_files.zip',
+      'in_data/forecast_[2021-04-16_2021-09-30]_files.zip',
+      'in_data/temperature_data.csv',
+      'in_data/release_data.csv',
+      "out_data/all_ensembles_predicted_observed.zip",
+      "out_data/paired_predicted_observed_temperatures.csv",
       "out_xml/fgdc_metadata.xml",
       sources = "src/sb_utils.R")
       
