@@ -568,6 +568,20 @@ entities:
       data-min: NA
       data-max: NA
       data-units: NA
+  -
+    data-name: forecast_sites.zip
+    data-description: >- 
+      GIS point data for the five forecast sites in the Delaware River Basin.
+      
+    attributes:
+    -
+      attr-label: site_id
+      attr-def: >-
+        USGS site number with "USGS-" prefix.
+      attr-defs: This data release
+      data-min: NA
+      data-max: NA
+      data-units: NA
 
 
 purpose: Decision making, reservoir releases, ecological forecasting.
