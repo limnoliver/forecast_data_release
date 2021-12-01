@@ -25,8 +25,11 @@ targets:
   out_data/all_ensembles_predicted_observed.zip:
     command: csv_to_zip(csv_file = 'out_data/all_ensembles_predicted_observed.csv', zip_file = target_name)
   
+  out_data/paired_predicted_observed_temperatures.rds:
+    command: data_cleanup(in_file = 'in_data/all_mods_with_obs.rds', out_file = target_name)
+  
   out_data/paired_predicted_observed_temperatures.csv:
-    command: rds_to_csv(rds_file = "in_data/all_mods_with_obs.rds", csv_file = target_name)
+    command: rds_to_csv(rds_file = "out_data/paired_predicted_observed_temperatures.rds", csv_file = target_name)
   
   forecast_sites:
     command: get_unique_sites("in_data/temperature_data.csv")

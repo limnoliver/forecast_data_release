@@ -36,3 +36,23 @@ sf_subset <- function(sites_file, sites) {
   
   return(subset)
 }
+
+# function to clean up some data issues after review
+# I also fixed these in the eval pipeline, but just adding the small
+# fix here instead of updating the archive
+data_cleanup <- function(in_file, out_file) {
+  dat <- readRDS(in_file) 
+  
+  sites <- dat %>%
+    select(seg_id_nat, site_name) %>%
+    distinct() %>%
+    filter(!is.na(site_name))
+  
+  out_dat <- select(dat, -site_name) %>%
+    left_join(sites) %>%
+    mutate(prob_exceed_75 = ifelse(is.na(max_temp_c_predicted), NA, prob_exceed_75))
+  
+  saveRDS(out_dat, out_file)
+  
+    
+}

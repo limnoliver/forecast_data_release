@@ -8,7 +8,7 @@ abstract: >-
   The model is driven by weather forecasts and observed reservoir releases and produces maximum water temperature
   forecasts for the issue day (day 0) and 7 days into the future (days 1-7) at five sites.
   This data release captures the entire forecasting period that is reported in
-  Zwart et al. 2021, and is an extensionsion of a previous data release that contains all data needed
+  Zwart et al. 2021, and is an extension of a previous data release that contains all data needed
   to build these models but only extends to July 16, 2021 (Oliver et al. 2021). Additionally, 
   this release contains a tidy version of the model predictions with paired observations for easier reuse.
       
@@ -64,26 +64,28 @@ cross-cites:
 
 process-date: !expr format(Sys.time(),'%Y%m%d')
 file-format: >-
-  This data release contains shape files, one comma-delimited file (.csv), one compressed comma-delimited file (.zip),
+  This data release contains shape files, three comma-delimited file (.csv), one compressed comma-delimited file (.zip),
   one compressed folder that contains many network common data form files (netCDF, .nc), and one 
   compresseed folder that contains many netCDF and extensible markup language files (.xml).
 
 entities:
   -
-    data-name: meteorological_[2021-04-16_2021-09-30]_files.zip
+    data-name: meteorological_[2021-04-15_2021-09-30]_files.zip
     data-description: >-
-      NOAA Global Ensemble Forecasting System v12.0 0.25-degree operational model output for the 00 UTC forecast cycle from 2021-04-15 to 2021-07-16.
+      NOAA Global Ensemble Forecasting System v12.0 0.25-degree operational model output for the 00 UTC forecast cycle from 2021-04-15 to 2021-09-30.
       These data are aggregated to the daily scale and NOAA GEFS grid cells are matched to the centroid of the target stream segment. The target stream segment
       seg_id_nat (National Geospatial Fabric segment code) is used as the location identifier for these data.
 
       
-      The zipped folder contains one NetCDF file per forecast issue date evaluated in Zwart and others 2021, such
-      that the file name is final_noaa_gefs_{extent}_{YYYY-MM-DD}_00_forecast_segments.segments.nc. Archiving of the NOAA GEFS
+      The zipped folder contains one netCDF file per forecast issue date evaluated in Zwart and others 2021, such
+      that the file name is final_noaa_gefs_{extent}_{YYYY-MM-DD}_{cycle}_forecast_segments.nc. Archiving of the NOAA GEFS
       product was changed from USGS NGWOS priority basins early in the record (extent = NGWOS) to the continental U.S. starting
-      on 2021-05-26 which is reflected in the name change (extent = CONUS).
+      on 2021-05-26 which is reflected in the name change (extent = CONUS). The cycle refers to one of the four forecasts
+      issued each day by NOAA; one at 00:00 (00), 06:00 (06), 12:00 (12), 18:00 (18).
+      
 
 
-      Example code for how read the NOAA GEFS .nc files can be found in the "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
+      Example code for how to read the NOAA GEFS .nc files can be found in the "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
 
     attributes:
     -
@@ -197,8 +199,8 @@ entities:
       attr-def: >-
         Date of temperature measurement
       attr-defs: This data release
-      data-min: 20210412
-      data-max: 20210929
+      data-min: 2021-04-12
+      data-max: 2021-09-29
       data-units: NA
     -
       attr-label: mean_temp_c
@@ -243,13 +245,13 @@ entities:
     -
       attr-label: seg_id_nat
       attr-def: >-
-        The closest river reach from the Geospatial Fabric v1.1, by Euclidean distance, from the monitoring site. 
-        Matches were limited to a 500m buffer of the monitoring site. The reach number is from the field "nsegment_v1_1" in the 
+        The closest river reach from the Geospatial Fabric v1.1, by Euclidean distance, from the monitoring site.
+        Matches were limited to a 500m buffer of the monitoring site. The reach number is from the field "nsegment_v1_1" in the
         Geospatial Fabric for the National Hydrologic Model v1.1.
         
         
-        Once the original reach match was assigned, the matched segment was reassigned if the endpoint of the 
-        upstream reach was closer to the monitoring site (by river distance) than the endpoint of the matched reach. 
+        Once the original reach match was assigned, the matched segment was reassigned if the endpoint of the
+        upstream reach was closer to the monitoring site (by river distance) than the endpoint of the matched reach.
         If the upstream endpoint was closer, but there was a confluence directly upstream, then the original match was kept.
       attr-defs:  >-
         https://doi.org/10.5066/P971JAGF
@@ -259,21 +261,22 @@ entities:
   -
     data-name: forecast_[2021-04-16_2021-09-30]_files.zip
     data-description: >-
-      Forecasts of daily maximum stream temperature for five select locations in the Delaware River Basin issued from 2021-04-15 to 2021-07-16.
+      Forecasts of daily maximum stream temperature for five select locations in the Delaware River Basin issued from 2021-04-16 to 2021-09-30.
       The target stream segment seg_id_nat (National Geospatial Fabric segment code) is used as the location identifier for these data.
 
       
-      Forecasts were generated with a 1) persistence model that used the most recent observed daily
-      maximum temperature as the 7-day ahead forecast, 2) a deep learning model, and a 3) deep learning
-      model with data assimilation. Code that trained the deep learning models can be found in the "run-pgdl-da " repository,
-      and code that generated the forecasts can be found in the "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
+      Forecasts were generated with a 1) persistence model that used the most recent observed daily maximum
+      temperature as the 7-day ahead forecast ("persistence"), 2) a deep learning model ("no_DA"), and a
+      3) deep learning model with data assimilation ("DA"). Code that trained the deep learning models can
+      be found in the "run-pgdl-da " repository, and code that generated the forecasts can be found in the
+      "forecast-pgdl-da" repository in Zwart and others 2021 (https://doi.org/10.5281/zenodo.5164910).
 
-      
-      The zipped file contains one zipped folder per issue date named forecast[{YYYY-MM-DD}]_files.zip.
-      Each issue date zipped folder contains two files for each model (DA, no_DA, persistence {model}),
-      stream segment (1571, 1573, 1641, 1565, 1450 {seg_id_nat}),
-      and reservoir release scenario (0cfs or 100cfs {scenario}) including a forecast netCDF file (.nc) and metadata file (.xml)
-      such that files are named lstm_seg_id_nat_[{seg_id_nat}]_{model}_forecast_[{YYYY-MM-DD}]_release[{scenario}]
+
+      The zipped folder contains two files per stream segment, model, forecast issue date, and scenario (10080 files).
+      The file naming scheme is lstm_seg_id_nat[{segment}]_{model}_forecast[{date}]_release[{scenario}], 
+      which is unique to the five stream segments (1571, 1573, 1641, 1565, 1450 {segment}), three models (DA, no_DA, persistence {model}),
+      168 issue dates (in YYYY-MM-DD format {date}), and two reservoir release scenario (0cfs or 100cfs {scenario}). The two files per unique
+      combination include a forecast netCDF file (.nc) and metadata file (.xml).
 
       
       Since observations of daily maximum stream temperature were not available when we issued
@@ -377,7 +380,9 @@ entities:
     data-description: >- 
       Model predictions with paired observations from all 3100 ensembles.
       Ensembles are generated by using the 31 NOAA GEFS ensembles with
-      100 Monte Carlo dropouts per NOAA GEFS ensemble. 
+      100 Monte Carlo dropouts per NOAA GEFS ensemble.
+      This dataset is a tidy version of the model predictions (stored in forecast_[2021-04-16_2021-09-30]_files.zip)
+      paired with observations (stored in temperature_data.csv) for easier reuse.
     attributes:
     -
       attr-label: issue_time
@@ -458,7 +463,10 @@ entities:
       data assimilation had 3100 ensembles, and reported predictions
       are the mean of the ensembles. The persistence model was generated
       by propagating yesterday's observed maximum temperature 7 days into
-      the future. 
+      the future. The DA and no_DA models were used to make predictions for
+      two scenarios: the observed researvoir release values (+0cfs) and
+      a scenario where a manager increased the releases by 100cfs (+100cfs).
+      For the +100 cfs scenario, we did not pair observervations with predictions.
     attributes:
     -
       attr-label: seg_id_nat
@@ -489,7 +497,7 @@ entities:
       attr-label: model_name
       attr-def: >-
         Which model was used to generate the predictions, either 
-        the deep learning model with data assimalation (DA) or the
+        the persistence model (persistence), the deep learning model with data assimalation (DA) or the
         deep learning without data assimilation (no_DA).
       attr-defs: This data release
       data-min: NA
@@ -585,7 +593,7 @@ entities:
 
 
 purpose: Decision making, reservoir releases, ecological forecasting.
-start-date: 20210412
+start-date: 20210416
 end-date: 20210930
 
 update: none planned
@@ -629,7 +637,7 @@ funding-credits: >-
 process-description: >-
   The data in this release were retrieved from the National Water Information System (NWIS), 
   the National Oceanic and Atmospheric Association (NOAA), or generated by one of the data-driven
-  modeling approaches to predict maximum water temperature. The models estimate the relationship 
+  modeling approaches to predict maximum water temperature. The models estimate the relationship
   between model drivers (weather data, reservoir releases) and maximum water temperature to
   make forecasts of maximum water temperature 7 days into the future. 
   
